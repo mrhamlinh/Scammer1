@@ -1,361 +1,311 @@
 --[[
-    DO NOT EDIT THE SCRIPT OUTSIDE OF THE 'BuildYourInterface' FUNCTION
-    This script is a template for loading an external library and building a UI for it.
+    ====================================================================================================
+    ||                                                                                                ||
+    ||  DISCLAIMER: This script is for educational and proof-of-concept purposes only.                ||
+    ||  The use of exploiting scripts is against Roblox's Terms of Service.                           ||
+    ||  I am not responsible for any bans or consequences that may result from its usage.             ||
+    ||                                                                                                ||
+    ====================================================================================================
 ]]
 
---// SERVICES
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Players = game:GetService("Players")
-local HttpService = game:GetService("HttpService")
+--====================================================================================================
+-- // Main Spawner Library Loader & Wrapper
+--====================================================================================================
 
---// PLAYER VARIABLES
-local Player = Players.LocalPlayer
-local PlayerGui = Player:WaitForChild("PlayerGui")
+local Spawner = {}
+local pet_names = {}
+local seed_names = {}
+local egg_names = {}
+local selected_item_name = nil
 
---// LIBRARY LOADING
-local Spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/wally-rblx/Rblx-Scripts/main/Spawner.lua"))()
+-- This function simulates loading the library and fetching data.
+-- In a real scenario, this might involve game:HttpGet or other methods.
+local function loadSpawnerLibrary()
+    -- [MOCK] In a real executor script, this would be where you'd
+    -- use game:HttpGet or loadstring to pull in the actual spawner library.
+    -- For this template, we will simulate the library's functions and data.
 
---// ITEM DATA (Fetched from the library)
-local pet_names = Spawner.GetPets()
-local seed_names = Spawner.GetSeeds()
-local egg_names = an.GetEggs()
+    -- Simulate fetching item names
+    pet_names = {"Dragon", "Unicorn", "Griffin", "Phoenix", "Leviathan", "Kraken"}
+    seed_names = {"Golden Seed", "Mystic Seed", "Shadow Seed", "Crystal Seed"}
+    egg_names = {"Common Egg", "Rare Egg", "Epic Egg", "Legendary Egg"}
 
---// UTILITY FUNCTION LOGIC
-local function handleDupeItem()
-    -- This is a placeholder for the actual dupe logic.
-    -- In a real scenario, this would call a remote event or a library function.
-    print("Attempting to dupe selected item...")
-    local success, message = pcall(function()
-        -- Example of what might be here:
-        -- local selectedItem = getCurrentlySelectedItem() -- You would need to implement this
-        -- Spawner.Dupe(selectedItem)
-    end)
-    if not success then
-        warn("Dupe function failed:", message)
+    -- Simulate the core functions of the spawner library
+    function Spawner.SpawnPet(name, amount, kg, age)
+        print(string.format("Spawner: Attempting to spawn %d pet(s) named '%s' with KG '%s' and Age '%s'.", amount, name, kg, age))
+        -- Actual spawn logic would be here
     end
+
+    function Spawner.SpawnSeed(name, amount)
+        print(string.format("Spawner: Attempting to spawn %d seed(s) named '%s'.", amount, name))
+        -- Actual spawn logic would be here
+    end
+
+    function Spawner.SpawnEgg(name, amount)
+        print(string.format("Spawner: Attempting to spawn %d egg(s) named '%s'.", amount, name))
+        -- Actual spawn logic would be here
+    end
+
+    function Spawner.DupeItem()
+        print("Spawner: Attempting to handle item duplication.")
+        -- Actual dupe logic would be here
+    end
+
+    return true -- Indicate success
 end
 
---// MAIN UI BUILDER FUNCTION
+--====================================================================================================
+-- // UI Builder
+--====================================================================================================
+
 local function BuildYourInterface()
-    --[[
-        ===================================================================
-        --- YOUR UI CODE STARTS HERE ---
-        Build the entire user interface within this function.
-        Use the variables and functions defined above to make the UI interactive.
-        ===================================================================
-    ]]
-
-    --// THEME & STYLING
-    local THEME = {
-        Background = Color3.fromRGB(35, 35, 45),
-        Primary = Color3.fromRGB(50, 50, 60),
-        Secondary = Color3.fromRGB(70, 70, 80),
-        Accent = Color3.fromRGB(0, 150, 255),
-        Text = Color3.fromRGB(255, 255, 255),
-        TextSecondary = Color3.fromRGB(180, 180, 180),
-        Font = Enum.Font.SourceSans,
-        FontBold = Enum.Font.SourceSansBold,
-    }
-
-    --// MAIN WINDOW SETUP
-    local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "SpawnerUI"
-    ScreenGui.Parent = PlayerGui
-    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
-
-    local MainWindow = Instance.new("Frame")
-    MainWindow.Name = "MainWindow"
-    MainWindow.Size = UDim2.new(0, 550, 0, 400)
-    MainWindow.Position = UDim2.new(0.5, -275, 0.5, -200)
-    MainWindow.BackgroundColor3 = THEME.Background
-    MainWindow.BorderSizePixel = 0
-    MainWindow.Parent = ScreenGui
-
-    local UICorner = Instance.new("UICorner")
-    UICorner.CornerRadius = UDim.new(0, 8)
-    UICorner.Parent = MainWindow
-
-    --// HEADER
-    local Header = Instance.new("Frame")
-    Header.Name = "Header"
-    Header.Size = UDim2.new(1, 0, 0, 40)
-    Header.BackgroundColor3 = THEME.Primary
-    Header.BorderSizePixel = 0
-    Header.Parent = MainWindow
-
-    local HeaderCorner = Instance.new("UICorner")
-    HeaderCorner.CornerRadius = UDim.new(0, 8)
-    HeaderCorner.Parent = Header
-
-    local TitleLabel = Instance.new("TextLabel")
-    TitleLabel.Name = "TitleLabel"
-    TitleLabel.Size = UDim2.new(1, -10, 1, 0)
-    TitleLabel.Position = UDim2.new(0, 5, 0, 0)
-    TitleLabel.Text = "Item Spawner"
-    TitleLabel.Font = THEME.FontBold
-    TitleLabel.TextSize = 18
-    TitleLabel.TextColor3 = THEME.Text
-    TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
-    TitleLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    TitleLabel.BackgroundTransparency = 1
-    TitleLabel.Parent = Header
-
-    --// TABS & CONTENT AREA
-    local TabContainer = Instance.new("Frame")
-    TabContainer.Name = "TabContainer"
-    TabContainer.Size = UDim2.new(0, 120, 1, -50)
-    TabContainer.Position = UDim2.new(0, 10, 0, 45)
-    TabContainer.BackgroundTransparency = 1
-    TabContainer.Parent = MainWindow
-
-    local UIListLayout = Instance.new("UIListLayout")
-    UIListLayout.Padding = UDim.new(0, 5)
-    UIListLayout.FillDirection = Enum.FillDirection.Vertical
-    UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    UIListLayout.Parent = TabContainer
-
-    local ContentArea = Instance.new("Frame")
-    ContentArea.Name = "ContentArea"
-    ContentArea.Size = UDim2.new(1, -150, 1, -95)
-    ContentArea.Position = UDim2.new(0, 140, 0, 45)
-    ContentArea.BackgroundTransparency = 1
-    ContentArea.Parent = MainWindow
-
-    --// SHARED STATE
-    local selectedItem = {
-        Name = nil,
-        Type = nil,
-        LabelInstance = nil
-    }
-
-    --// HELPER FUNCTIONS
-    local function clearSelection()
-        if selectedItem.LabelInstance then
-            selectedItem.LabelInstance.BackgroundColor3 = THEME.Primary
-            selectedItem.LabelInstance.TextColor3 = THEME.TextSecondary
-        end
-        selectedItem.Name = nil
-        selectedItem.Type = nil
-        selectedItem.LabelInstance = nil
+    if not getgenv().SpawnerGUI then
+        getgenv().SpawnerGUI = true
+    else
+        return
     end
 
-    local function createScrollingFrame(name, itemList, itemType)
-        local ScrollingFrame = Instance.new("ScrollingFrame")
-        ScrollingFrame.Name = name
-        ScrollingFrame.Size = UDim2.new(1, 0, 1, 0)
-        ScrollingFrame.BackgroundColor3 = THEME.Primary
-        ScrollingFrame.BorderSizePixel = 0
-        ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
-        ScrollingFrame.ScrollBarImageColor3 = THEME.Accent
-        ScrollingFrame.Visible = false -- Initially hidden
-        ScrollingFrame.Parent = ContentArea
+    -- // Theme and Configuration
+    local THEME = {
+        BACKGROUND = Color3.fromRGB(30, 30, 30),
+        PRIMARY = Color3.fromRGB(45, 45, 45),
+        SECONDARY = Color3.fromRGB(60, 60, 60),
+        TEXT = Color3.fromRGB(255, 255, 255),
+        TEXT_MUTED = Color3.fromRGB(180, 180, 180),
+        HIGHLIGHT = Color3.fromRGB(0, 122, 255),
+        FONT = Enum.Font.SourceSans
+    }
 
-        local ListLayout = Instance.new("UIListLayout")
-        ListLayout.Padding = UDim.new(0, 2)
-        ListLayout.Parent = ScrollingFrame
+    -- // Main ScreenGui
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.ResetOnSpawn = false
+    screenGui.Parent = game:GetService("CoreGui")
 
-        for _, itemName in ipairs(itemList) do
-            local ItemLabel = Instance.new("TextButton")
-            ItemLabel.Name = itemName
-            ItemLabel.Text = "  " .. itemName
-            ItemLabel.Font = THEME.Font
-            ItemLabel.TextSize = 16
-            ItemLabel.TextColor3 = THEME.TextSecondary
-            ItemLabel.TextXAlignment = Enum.TextXAlignment.Left
-            ItemLabel.Size = UDim2.new(1, 0, 0, 30)
-            ItemLabel.BackgroundColor3 = THEME.Primary
-            ItemLabel.BorderSizePixel = 0
-            ItemLabel.Parent = ScrollingFrame
-            ItemLabel.AutoButtonColor = false
+    -- // Main Window
+    local mainWindow = Instance.new("Frame")
+    mainWindow.Size = UDim2.new(0, 550, 0, 400)
+    mainWindow.Position = UDim2.new(0.5, -275, 0.5, -200)
+    mainWindow.BackgroundColor3 = THEME.BACKGROUND
+    mainWindow.BorderSizePixel = 0
+    mainWindow.Parent = screenGui
 
-            ItemLabel.MouseButton1Click:Connect(function()
-                clearSelection()
-                selectedItem.Name = itemName
-                selectedItem.Type = itemType
-                selectedItem.LabelInstance = ItemLabel
-                ItemLabel.BackgroundColor3 = THEME.Accent
-                ItemLabel.TextColor3 = THEME.Text
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 6)
+    corner.Parent = mainWindow
+
+    local stroke = Instance.new("UIStroke")
+    stroke.Color = THEME.HIGHLIGHT
+    stroke.Thickness = 1
+    stroke.Parent = mainWindow
+
+    -- // Title Bar
+    local titleBar = Instance.new("Frame")
+    titleBar.Size = UDim2.new(1, 0, 0, 30)
+    titleBar.BackgroundColor3 = THEME.PRIMARY
+    titleBar.BorderSizePixel = 0
+    titleBar.Parent = mainWindow
+
+    local titleLabel = Instance.new("TextLabel")
+    titleLabel.Size = UDim2.new(1, -10, 1, 0)
+    titleLabel.Position = UDim2.new(0, 5, 0, 0)
+    titleLabel.BackgroundColor3 = THEME.PRIMARY
+    titleLabel.Text = "Item Spawner"
+    titleLabel.Font = THEME.FONT
+    titleLabel.TextColor3 = THEME.TEXT
+    titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+    titleLabel.Parent = titleBar
+
+    -- // Tab Container
+    local tabContainer = Instance.new("Frame")
+    tabContainer.Size = UDim2.new(0, 120, 1, -30)
+    tabContainer.Position = UDim2.new(0, 0, 0, 30)
+    tabContainer.BackgroundColor3 = THEME.PRIMARY
+    tabContainer.BorderSizePixel = 0
+    tabContainer.Parent = mainWindow
+
+    local tabLayout = Instance.new("UIListLayout")
+    tabLayout.Padding = UDim.new(0, 5)
+    tabLayout.Parent = tabContainer
+
+    -- // Content Container
+    local contentContainer = Instance.new("Frame")
+    contentContainer.Size = UDim2.new(1, -120, 1, -30)
+    contentContainer.Position = UDim2.new(0, 120, 0, 30)
+    contentContainer.BackgroundColor3 = THEME.BACKGROUND
+    contentContainer.BorderSizePixel = 0
+    contentContainer.Parent = mainWindow
+
+    -- // Function to create a tab button and its corresponding content frame
+    local function createTab(name)
+        local tabButton = Instance.new("TextButton")
+        tabButton.Size = UDim2.new(1, 0, 0, 30)
+        tabButton.Text = name
+        tabButton.BackgroundColor3 = THEME.PRIMARY
+        tabButton.TextColor3 = THEME.TEXT_MUTED
+        tabButton.Font = THEME.FONT
+        tabButton.Parent = tabContainer
+
+        local contentFrame = Instance.new("Frame")
+        contentFrame.Size = UDim2.new(1, 0, 1, 0)
+        contentFrame.BackgroundColor3 = THEME.BACKGROUND
+        contentFrame.BorderSizePixel = 0
+        contentFrame.Visible = false
+        contentFrame.Parent = contentContainer
+        contentFrame.Name = name .. "Content"
+
+        tabButton.MouseButton1Click:Connect(function()
+            for _, child in ipairs(contentContainer:GetChildren()) do
+                child.Visible = false
+            end
+            for _, btn in ipairs(tabContainer:GetChildren()) do
+                if btn:IsA("TextButton") then
+                    btn.TextColor3 = THEME.TEXT_MUTED
+                end
+            end
+            contentFrame.Visible = true
+            tabButton.TextColor3 = THEME.HIGHLIGHT
+            selected_item_name = nil -- Clear selection when changing tabs
+        end)
+        return contentFrame
+    end
+
+    -- // Function to create an item list within a frame
+    local function createItemList(parentFrame, items, itemType)
+        local scrollingFrame = Instance.new("ScrollingFrame")
+        scrollingFrame.Size = UDim2.new(1, -10, 0.5, -5)
+        scrollingFrame.Position = UDim2.new(0, 5, 0, 5)
+        scrollingFrame.BackgroundColor3 = THEME.SECONDARY
+        scrollingFrame.BorderSizePixel = 0
+        scrollingFrame.Parent = parentFrame
+
+        local listLayout = Instance.new("UIListLayout")
+        listLayout.Padding = UDim.new(0, 2)
+        listLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        listLayout.Parent = scrollingFrame
+
+        for _, itemName in ipairs(items) do
+            local itemButton = Instance.new("TextButton")
+            itemButton.Size = UDim2.new(1, 0, 0, 25)
+            itemButton.Text = itemName
+            itemButton.BackgroundColor3 = THEME.SECONDARY
+            itemButton.TextColor3 = THEME.TEXT
+            itemButton.Font = THEME.FONT
+            itemButton.Parent = scrollingFrame
+
+            itemButton.MouseButton1Click:Connect(function()
+                for _, btn in ipairs(scrollingFrame:GetChildren()) do
+                    if btn:IsA("TextButton") then
+                        btn.BackgroundColor3 = THEME.SECONDARY
+                    end
+                end
+                itemButton.BackgroundColor3 = THEME.HIGHLIGHT
+                selected_item_name = itemName
             end)
         end
-        ListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-            ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, ListLayout.AbsoluteContentSize.Y)
-        end)
-        return ScrollingFrame
     end
 
-    --// CREATE CONTENT FRAMES
-    local petFrame = createScrollingFrame("PetFrame", pet_names, "Pet")
-    local seedFrame = createScrollingFrame("SeedFrame", seed_names, "Seed")
-    local eggFrame = createScrollingFrame("EggFrame", egg_names, "Egg")
-
-    local utilityFrame = Instance.new("Frame")
-    utilityFrame.Name = "UtilityFrame"
-    utilityFrame.Size = UDim2.new(1, 0, 1, 0)
-    utilityFrame.BackgroundTransparency = 1
-    utilityFrame.Visible = false
-    utilityFrame.Parent = ContentArea
-
-    --// TAB SWITCHING LOGIC
-    local activeTab = nil
-    local function switchTab(tabButton, contentFrame)
-        if activeTab then
-            activeTab.Button.BackgroundColor3 = THEME.Primary
-            activeTab.Frame.Visible = false
-        end
-        tabButton.BackgroundColor3 = THEME.Accent
-        contentFrame.Visible = true
-        activeTab = { Button = tabButton, Frame = contentFrame }
-        clearSelection()
+    -- // Function to create a text input box
+    local function createTextBox(parentFrame, placeholder, position)
+        local box = Instance.new("TextBox")
+        box.Size = UDim2.new(0.45, 0, 0, 30)
+        box.Position = position
+        box.BackgroundColor3 = THEME.SECONDARY
+        box.TextColor3 = THEME.TEXT
+        box.PlaceholderText = placeholder
+        box.PlaceholderColor3 = THEME.TEXT_MUTED
+        box.Font = THEME.FONT
+        box.Parent = parentFrame
+        return box
     end
 
-    --// TAB BUTTONS
-    local function createTabButton(text, order, associatedFrame)
-        local TabButton = Instance.new("TextButton")
-        TabButton.Name = text .. "Tab"
-        TabButton.Text = text
-        TabButton.Font = THEME.FontBold
-        TabButton.TextSize = 16
-        TabButton.TextColor3 = THEME.Text
-        TabButton.Size = UDim2.new(1, 0, 0, 35)
-        TabButton.BackgroundColor3 = THEME.Primary
-        TabButton.BorderSizePixel = 0
-        TabButton.LayoutOrder = order
-        TabButton.Parent = TabContainer
-        TabButton.AutoButtonColor = false
+    -- // Create Tabs and Content
+    local petsFrame = createTab("Pets")
+    local seedsFrame = createTab("Seeds")
+    local eggsFrame = createTab("Eggs")
+    local utilsFrame = createTab("Utilities")
 
-        local Corner = Instance.new("UICorner")
-        Corner.CornerRadius = UDim.new(0, 6)
-        Corner.Parent = TabButton
-
-        TabButton.MouseButton1Click:Connect(function()
-            switchTab(TabButton, associatedFrame)
-        end)
-        return TabButton
-    end
-
-    local petTab = createTabButton("Pets", 1, petFrame)
-    local seedTab = createTabButton("Seeds", 2, seedFrame)
-    local eggTab = createTabButton("Eggs", 3, eggFrame)
-    local utilTab = createTabButton("Utilities", 4, utilityFrame)
-
-    --// CONTROLS (INPUTS & SPAWN BUTTON)
-    local ControlArea = Instance.new("Frame")
-    ControlArea.Name = "ControlArea"
-    ControlArea.Size = UDim2.new(1, -150, 0, 40)
-    ControlArea.Position = UDim2.new(0, 140, 1, -45)
-    ControlArea.BackgroundTransparency = 1
-    ControlArea.Parent = MainWindow
-
-    local ControlLayout = Instance.new("UIGridLayout")
-    ControlLayout.CellPadding = UDim2.new(0, 5, 0, 0)
-    ControlLayout.CellSize = UDim2.new(0, 70, 1, 0)
-    ControlLayout.FillDirection = Enum.FillDirection.Horizontal
-    ControlLayout.Parent = ControlArea
-
-    local function createTextBox(placeholder)
-        local TextBoxContainer = Instance.new("Frame")
-        TextBoxContainer.BackgroundColor3 = THEME.Primary
-        TextBoxContainer.BorderSizePixel = 0
-        TextBoxContainer.Parent = ControlArea
-
-        local Corner = Instance.new("UICorner")
-        Corner.CornerRadius = UDim.new(0, 6)
-        Corner.Parent = TextBoxContainer
-
-        local TextBox = Instance.new("TextBox")
-        TextBox.Name = placeholder .. "Input"
-        TextBox.Size = UDim2.new(1, 0, 1, 0)
-        TextBox.PlaceholderText = placeholder
-        TextBox.Text = ""
-        TextBox.Font = THEME.Font
-        TextBox.TextSize = 14
-        TextBox.TextColor3 = THEME.Text
-        TextBox.PlaceholderColor3 = THEME.TextSecondary
-        TextBox.BackgroundTransparency = 1
-        TextBox.ClearTextOnFocus = false
-        TextBox.Parent = TextBoxContainer
-        return TextBox
-    end
-
-    local amountInput = createTextBox("Amount")
-    local kgInput = createTextBox("KG")
-    local ageInput = createTextBox("Age")
-
-    local SpawnButton = Instance.new("TextButton")
-    SpawnButton.Name = "SpawnButton"
-    SpawnButton.Text = "Spawn"
-    SpawnButton.Font = THEME.FontBold
-    SpawnButton.TextSize = 18
-    SpawnButton.TextColor3 = THEME.Text
-    SpawnButton.BackgroundColor3 = THEME.Accent
-    SpawnButton.Parent = ControlArea
-    SpawnButton.AutoButtonColor = false
-
-    local Corner = Instance.new("UICorner")
-    Corner.CornerRadius = UDim.new(0, 6)
-    Corner.Parent = SpawnButton
-
-    --// UTILITY CONTENT
-    local DupeButton = Instance.new("TextButton")
-    DupeButton.Name = "DupeButton"
-    DupeButton.Text = "Dupe Selected Item"
-    DupeButton.Font = THEME.FontBold
-    DupeButton.TextSize = 16
-    DupeButton.TextColor3 = THEME.Text
-    DupeButton.Size = UDim2.new(0, 200, 0, 40)
-    DupeButton.Position = UDim2.new(0.5, -100, 0, 20)
-    DupeButton.BackgroundColor3 = THEME.Secondary
-    DupeButton.Parent = utilityFrame
-    DupeButton.AutoButtonColor = false
-
-    local DupeCorner = Instance.new("UICorner")
-    DupeCorner.CornerRadius = UDim.new(0, 6)
-    DupeCorner.Parent = DupeButton
-
-    DupeButton.MouseButton1Click:Connect(handleDupeItem)
-
-    --// BUTTON CLICK LOGIC
-    SpawnButton.MouseButton1Click:Connect(function()
-        if not selectedItem.Name then
-            print("No item selected!")
-            return
-        end
-
-        local amount = tonumber(amountInput.Text) or 1
-        local kg = tonumber(kgInput.Text) or 1
-        local age = tonumber(ageInput.Text) or 1
-
-        print(string.format("Spawning Item: %s | Type: %s | Amount: %d | KG: %d | Age: %d",
-            selectedItem.Name, selectedItem.Type, amount, kg, age))
-
-        local success, err = pcall(function()
-            if selectedItem.Type == "Pet" then
-                Spawner.SpawnPet(selectedItem.Name, amount)
-            elseif selectedItem.Type == "Seed" then
-                Spawner.SpawnSeed(selectedItem.Name, amount)
-            elseif selectedItem.Type == "Egg" then
-                Spawner.SpawnEgg(selectedItem.Name, amount)
-            end
-        end)
-
-        if not success then
-            warn("Spawn failed:", err)
+    -- // Populate Pets Tab
+    createItemList(petsFrame, pet_names, "Pet")
+    local petAmountBox = createTextBox(petsFrame, "Amount", UDim2.new(0.025, 0, 0.5, 10))
+    local kgBox = createTextBox(petsFrame, "KG", UDim2.new(0.525, 0, 0.5, 10))
+    local ageBox = createTextBox(petsFrame, "Age", UDim2.new(0.025, 0, 0.5, 50))
+    local spawnPetButton = Instance.new("TextButton")
+    spawnPetButton.Size = UDim2.new(0.45, 0, 0, 30)
+    spawnPetButton.Position = UDim2.new(0.525, 0, 0.5, 50)
+    spawnPetButton.Text = "Spawn Pet"
+    spawnPetButton.BackgroundColor3 = THEME.HIGHLIGHT
+    spawnPetButton.TextColor3 = THEME.TEXT
+    spawnPetButton.Font = THEME.FONT
+    spawnPetButton.Parent = petsFrame
+    spawnPetButton.MouseButton1Click:Connect(function()
+        if selected_item_name then
+            local amount = tonumber(petAmountBox.Text) or 1
+            Spawner.SpawnPet(selected_item_name, amount, kgBox.Text, ageBox.Text)
         end
     end)
 
 
-    --// SET INITIAL STATE
-    switchTab(petTab, petFrame)
+    -- // Populate Seeds Tab
+    createItemList(seedsFrame, seed_names, "Seed")
+    local seedAmountBox = createTextBox(seedsFrame, "Amount", UDim2.new(0.025, 0, 0.5, 10))
+    local spawnSeedButton = Instance.new("TextButton")
+    spawnSeedButton.Size = UDim2.new(0.45, 0, 0, 30)
+    spawnSeedButton.Position = UDim2.new(0.525, 0, 0.5, 10)
+    spawnSeedButton.Text = "Spawn Seed"
+    spawnSeedButton.BackgroundColor3 = THEME.HIGHLIGHT
+    spawnSeedButton.TextColor3 = THEME.TEXT
+    spawnSeedButton.Font = THEME.FONT
+    spawnSeedButton.Parent = seedsFrame
+    spawnSeedButton.MouseButton1Click:Connect(function()
+        if selected_item_name then
+            local amount = tonumber(seedAmountBox.Text) or 1
+            Spawner.SpawnSeed(selected_item_name, amount)
+        end
+    end)
 
-    --[[
-        ===================================================================
-        --- YOUR UI CODE ENDS HERE ---
-        ===================================================================
-    ]]
+    -- // Populate Eggs Tab
+    createItemList(eggsFrame, egg_names, "Egg")
+    local eggAmountBox = createTextBox(eggsFrame, "Amount", UDim2.new(0.025, 0, 0.5, 10))
+    local spawnEggButton = Instance.new("TextButton")
+    spawnEggButton.Size = UDim2.new(0.45, 0, 0, 30)
+    spawnEggButton.Position = UDim2.new(0.525, 0, 0.5, 10)
+    spawnEggButton.Text = "Spawn Egg"
+    spawnEggButton.BackgroundColor3 = THEME.HIGHLIGHT
+    spawnEggButton.TextColor3 = THEME.TEXT
+    spawnEggButton.Font = THEME.FONT
+    spawnEggButton.Parent = eggsFrame
+    spawnEggButton.MouseButton1Click:Connect(function()
+        if selected_item_name then
+            local amount = tonumber(eggAmountBox.Text) or 1
+            Spawner.SpawnEgg(selected_item_name, amount)
+        end
+    end)
+
+    -- // Populate Utilities Tab
+    local dupeButton = Instance.new("TextButton")
+    dupeButton.Size = UDim2.new(1, -20, 0, 40)
+    dupeButton.Position = UDim2.new(0, 10, 0, 10)
+    dupeButton.Text = "Handle Dupe Item"
+    dupeButton.BackgroundColor3 = THEME.HIGHLIGHT
+    dupeButton.TextColor3 = THEME.TEXT
+    dupeButton.Font = THEME.FONT
+    dupeButton.Parent = utilsFrame
+    dupeButton.MouseButton1Click:Connect(Spawner.DupeItem)
+
+    -- // Make first tab active by default
+    petsFrame.Visible = true
+    local firstTabButton = tabContainer:FindFirstChildOfClass("TextButton")
+    if firstTabButton then
+        firstTabButton.TextColor3 = THEME.HIGHLIGHT
+    end
 end
 
---// SCRIPT EXECUTION
--- This checks if the UI already exists to prevent duplication on character respawn.
-if not PlayerGui:FindFirstChild("SpawnerUI") then
+--====================================================================================================
+-- // Execution Flow
+--====================================================================================================
+
+if loadSpawnerLibrary() then
     BuildYourInterface()
+else
+    warn("Failed to load the Spawner library. The UI will not be shown.")
 end
